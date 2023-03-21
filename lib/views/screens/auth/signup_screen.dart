@@ -124,21 +124,23 @@ class SignupScreen extends StatelessWidget {
               ),
               child: InkWell(
                 onTap: () async {
-                  await authController.registerUser(
+                  final res = await authController.registerUser(
                     context: context,
                     username: _userNameController.text,
                     email: _emailController.text,
                     password: _passwordController.text,
                     image: authController.getPickedImage,
                   );
-                  [
-                    _userNameController,
-                    _emailController,
-                    _passwordController,
-                  ].forEach((element) {
-                    element.clear();
-                  });
-                  authController.setPickedImageEmpty();
+                  if (res == "success") {
+                    [
+                      _userNameController,
+                      _emailController,
+                      _passwordController,
+                    ].forEach((element) {
+                      element.clear();
+                    });
+                    authController.setPickedImageEmpty();
+                  }
                 },
                 child: Container(
                   alignment: Alignment.center,

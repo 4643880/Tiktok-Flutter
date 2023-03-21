@@ -12,6 +12,7 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Container(
         alignment: Alignment.center,
         child: Column(
@@ -68,7 +69,21 @@ class LoginScreen extends StatelessWidget {
                 ),
               ),
               child: InkWell(
-                onTap: () {},
+                onTap: () async {
+                  final res = await authController.loginUser(
+                    context: context,
+                    email: _emailController.text,
+                    password: _passwordController.text,
+                  );
+                  if (res == "success") {
+                    [
+                      _emailController,
+                      _passwordController,
+                    ].forEach((element) {
+                      element.clear();
+                    });
+                  }
+                },
                 child: Container(
                   alignment: Alignment.center,
                   child: const Text(

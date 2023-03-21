@@ -54,7 +54,7 @@ class AuthController extends GetxController {
   }
 
   // register
-  Future<void> registerUser({
+  Future<String?> registerUser({
     required BuildContext context,
     required String username,
     required String email,
@@ -62,6 +62,7 @@ class AuthController extends GetxController {
     required File? image,
   }) async {
     try {
+      String res = "";
       if (username.isNotEmpty &&
           email.isNotEmpty &&
           password.isNotEmpty &&
@@ -99,6 +100,8 @@ class AuthController extends GetxController {
           "Signed Up",
           "Congratulations you have signed up successfully.",
         );
+        res = "success";
+        return res;
       }
     } on FirebaseAuthException catch (e) {
       devtools.log(e.toString());
@@ -128,5 +131,59 @@ class AuthController extends GetxController {
       Get.snackbar("Something Went Wrong", e.toString());
       devtools.log(e.toString());
     }
+  }
+
+  // Login User
+  Future<String?> loginUser({
+    required BuildContext context,
+    required String email,
+    required String password,
+  }) async {
+    try {
+      String res = "";
+      if (email.isNotEmpty && password.isNotEmpty) {
+        // logging in user with email and password
+        await firebaseAuth.signInWithEmailAndPassword(
+          email: email,
+          password: password,
+        );
+        Get.snackbar(
+          "Login",
+          "Congratulations you have Loggedin successfully.",
+        );
+        res = "success";
+        return res;
+      }
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        devtools.log('No user found for that email.');
+        await showErrorDialog(
+          context,
+          "User Not Found",
+          "No user found for that email. Please try again.",
+        );
+      } else if (e.code == 'wrong-password') {
+        devtools.log(
+          'Wrong password provided for that user.',
+        );
+        await showErrorDialog(
+          context,
+          "Wrong Password",
+          "Wrong password provided for that user. Please try again.",
+        );
+      } else {
+        devtools.log(e.code.toString());
+        await showErrorDialog(
+            context, "Something Went Wrong", "Error:  ${e.code}");
+      }
+    } catch (e) {
+      Get.snackbar("Something Went Wrong", e.toString());
+      devtools.log(e.toString());
+    }
+  }
+
+  // Sign out
+  Future<void> signout() async {
+    firebaseAuth.signOut();
   }
 }
