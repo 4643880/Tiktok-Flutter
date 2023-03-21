@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:tiktok_flutter/constants.dart';
-import 'package:tiktok_flutter/views/screens/auth/signup_screen.dart';
+import 'package:tiktok_flutter/views/screens/auth/login_screen.dart';
 import 'package:tiktok_flutter/views/widgets/text_input_field.dart';
 
-class LoginScreen extends StatelessWidget {
-  LoginScreen({super.key});
+class SignupScreen extends StatelessWidget {
+  SignupScreen({super.key});
 
+  final TextEditingController _userNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -26,7 +27,7 @@ class LoginScreen extends StatelessWidget {
               ),
             ),
             const Text(
-              "Login",
+              "Register",
               style: TextStyle(
                 fontSize: 25,
                 fontWeight: FontWeight.w700,
@@ -34,6 +35,40 @@ class LoginScreen extends StatelessWidget {
             ),
             const SizedBox(
               height: 25,
+            ),
+            Stack(
+              children: [
+                const CircleAvatar(
+                  radius: 64,
+                  backgroundImage:
+                      NetworkImage('https://i.stack.imgur.com/l60Hf.png'),
+                  backgroundColor: Colors.black,
+                ),
+                Positioned(
+                  bottom: -10,
+                  left: 80,
+                  child: IconButton(
+                    onPressed: () {},
+                    icon: const Icon(
+                      Icons.add_a_photo,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 25,
+            ),
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 20),
+              child: TextInputField(
+                controller: _userNameController,
+                labelText: "Username",
+                icon: Icons.person,
+              ),
+            ),
+            const SizedBox(
+              height: 15,
             ),
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 20),
@@ -44,7 +79,7 @@ class LoginScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(
-              height: 25,
+              height: 15,
             ),
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 20),
@@ -56,7 +91,7 @@ class LoginScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(
-              height: 30,
+              height: 25,
             ),
             Container(
               width: MediaQuery.of(context).size.width - 40,
@@ -72,7 +107,7 @@ class LoginScreen extends StatelessWidget {
                 child: Container(
                   alignment: Alignment.center,
                   child: const Text(
-                    'Login',
+                    'SIGNUP',
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w700,
@@ -88,7 +123,7 @@ class LoginScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text(
-                  'Don\'t have an account? ',
+                  'Already have an account? ',
                   style: TextStyle(
                     fontSize: 20,
                   ),
@@ -96,11 +131,11 @@ class LoginScreen extends StatelessWidget {
                 InkWell(
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => SignupScreen(),
+                      builder: (context) => LoginScreen(),
                     ));
                   },
                   child: Text(
-                    'Register',
+                    'Login',
                     style: TextStyle(fontSize: 20, color: buttonColor),
                   ),
                 ),
