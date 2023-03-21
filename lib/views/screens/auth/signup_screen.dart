@@ -1,5 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:tiktok_flutter/constants.dart';
+import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:tiktok_flutter/utils/constants.dart';
+import 'package:tiktok_flutter/controllers/auth_controller.dart';
+import 'package:tiktok_flutter/utils/utils.dart';
 import 'package:tiktok_flutter/views/screens/auth/login_screen.dart';
 import 'package:tiktok_flutter/views/widgets/text_input_field.dart';
 
@@ -13,6 +19,7 @@ class SignupScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Container(
         alignment: Alignment.center,
         child: Column(
@@ -36,25 +43,38 @@ class SignupScreen extends StatelessWidget {
             const SizedBox(
               height: 25,
             ),
-            Stack(
-              children: [
-                const CircleAvatar(
-                  radius: 64,
-                  backgroundImage:
-                      NetworkImage('https://i.stack.imgur.com/l60Hf.png'),
-                  backgroundColor: Colors.black,
-                ),
-                Positioned(
-                  bottom: -10,
-                  left: 80,
-                  child: IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.add_a_photo,
+            Obx(
+              () => Stack(
+                children: [
+                  authController.getPickedImage!.path == ""
+                      ? const CircleAvatar(
+                          radius: 64,
+                          backgroundImage: NetworkImage(
+                            'https://i.stack.imgur.com/l60Hf.png',
+                          ),
+                          backgroundColor: Colors.black,
+                        )
+                      : CircleAvatar(
+                          radius: 64,
+                          backgroundImage: FileImage(
+                            authController.getPickedImage!,
+                          ),
+                          backgroundColor: Colors.black,
+                        ),
+                  Positioned(
+                    bottom: -10,
+                    left: 80,
+                    child: IconButton(
+                      onPressed: () {
+                        authController.pickImage();
+                      },
+                      icon: const Icon(
+                        Icons.add_a_photo,
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
             const SizedBox(
               height: 25,
@@ -103,7 +123,23 @@ class SignupScreen extends StatelessWidget {
                 ),
               ),
               child: InkWell(
-                onTap: () {},
+                onTap: () async {
+                  await authController.registerUser(
+                    context: context,
+                    username: _userNameController.text,
+                    email: _emailController.text,
+                    password: _passwordController.text,
+                    image: authController.getPickedImage,
+                  );
+                  [
+                    _userNameController,
+                    _emailController,
+                    _passwordController,
+                  ].forEach((element) {
+                    element.clear();
+                  });
+                  authController.setPickedImageEmpty();
+                },
                 child: Container(
                   alignment: Alignment.center,
                   child: const Text(

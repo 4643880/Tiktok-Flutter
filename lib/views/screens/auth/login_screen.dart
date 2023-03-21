@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tiktok_flutter/constants.dart';
+import 'package:tiktok_flutter/utils/constants.dart';
 import 'package:tiktok_flutter/views/screens/auth/signup_screen.dart';
 import 'package:tiktok_flutter/views/widgets/text_input_field.dart';
 
