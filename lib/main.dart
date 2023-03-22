@@ -2,8 +2,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tiktok_flutter/utils/constants.dart';
-import 'package:tiktok_flutter/controllers/auth_controller.dart';
+import 'package:tiktok_flutter/utils/helper.dart' as di;
 import 'package:tiktok_flutter/views/screens/auth/signup_screen.dart';
+
+import 'controllers/auth_controller.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -11,6 +13,8 @@ void main() async {
     Get.put(AuthController());
   });
   runApp(const MyApp());
+  // di means dependency injection
+  await di.init();
 }
 
 class MyApp extends StatelessWidget {

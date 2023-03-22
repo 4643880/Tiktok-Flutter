@@ -8,6 +8,8 @@ import 'dart:developer' as devtools show log;
 import 'package:tiktok_flutter/utils/constants.dart';
 import 'package:tiktok_flutter/models/user_model.dart' as model;
 import 'package:tiktok_flutter/utils/show_error_dialog.dart';
+import 'package:tiktok_flutter/views/screens/auth/login_screen.dart';
+import 'package:tiktok_flutter/views/screens/home_screen.dart';
 
 extension Log on Object {
   void log() => devtools.log(toString());
@@ -16,7 +18,34 @@ extension Log on Object {
 class AuthController extends GetxController {
   static AuthController instance = Get.find();
 
+  //=====================================================
+  // Persisting Auth State with Getx
+  //=====================================================
+  late Rx<User?> _user;
+
+  User? get getCurrentUser => _user.value;
+
+  @override
+  void onReady() {
+    _user = firebaseAuth.currentUser.obs;
+    // It will track current changes in auth
+    _user.bindStream(firebaseAuth.authStateChanges());
+    // Whenever will be changes then it will listen and perform action through my function
+    ever(_user, _setInitialScreen);
+    super.onReady();
+  }
+
+  _setInitialScreen(User? user) {
+    if (user == null) {
+      Get.offAll(LoginScreen());
+    } else {
+      Get.offAll(const HomeScreen());
+    }
+  }
+
+  //=====================================================
   // Picking Image For SignUp User
+  //=====================================================
   Rx<File?> _pickedImage = File("").obs;
   File? get getPickedImage => _pickedImage.value;
 
@@ -40,7 +69,10 @@ class AuthController extends GetxController {
     }
   }
 
+  //=====================================================
   // upload to firebase storage
+  //=====================================================
+
   Future<String> uploadToStorage(
     File image,
     String child,
@@ -53,7 +85,10 @@ class AuthController extends GetxController {
     return dawnloadUrl;
   }
 
+  //=====================================================
   // register
+  //=====================================================
+
   Future<String?> registerUser({
     required BuildContext context,
     required String username,
@@ -133,7 +168,9 @@ class AuthController extends GetxController {
     }
   }
 
+  //=====================================================
   // Login User
+  //=====================================================
   Future<String?> loginUser({
     required BuildContext context,
     required String email,
@@ -182,7 +219,9 @@ class AuthController extends GetxController {
     }
   }
 
-  // Sign out
+  //=====================================================
+  //  Sign out
+  //=====================================================
   Future<void> signout() async {
     firebaseAuth.signOut();
   }

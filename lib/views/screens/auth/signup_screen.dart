@@ -1,11 +1,6 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:tiktok_flutter/utils/constants.dart';
-import 'package:tiktok_flutter/controllers/auth_controller.dart';
-import 'package:tiktok_flutter/utils/utils.dart';
 import 'package:tiktok_flutter/views/screens/auth/login_screen.dart';
 import 'package:tiktok_flutter/views/widgets/text_input_field.dart';
 
@@ -15,6 +10,7 @@ class SignupScreen extends StatelessWidget {
   final TextEditingController _userNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  RxBool isLoading = false.obs;
 
   @override
   Widget build(BuildContext context) {
@@ -124,6 +120,7 @@ class SignupScreen extends StatelessWidget {
               ),
               child: InkWell(
                 onTap: () async {
+                  isLoading.value = true;
                   final res = await authController.registerUser(
                     context: context,
                     username: _userNameController.text,
@@ -141,15 +138,24 @@ class SignupScreen extends StatelessWidget {
                     });
                     authController.setPickedImageEmpty();
                   }
+                  isLoading.value = false;
                 },
-                child: Container(
-                  alignment: Alignment.center,
-                  child: const Text(
-                    'SIGNUP',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w700,
-                    ),
+                child: Obx(
+                  () => Container(
+                    alignment: Alignment.center,
+                    child: isLoading.value == false
+                        ? const Text(
+                            'SIGNUP',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          )
+                        : const Center(
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                            ),
+                          ),
                   ),
                 ),
               ),
