@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:tiktok_flutter/views/screens/add_video_screen.dart';
 import 'package:tiktok_flutter/views/widgets/custom_icon.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -66,9 +67,7 @@ class HomeScreen extends StatelessWidget {
           Center(
             child: Text("Search"),
           ),
-          Center(
-            child: Text("Upload"),
-          ),
+          AddVideoScreen(),
           Center(
             child: Text("Messages"),
           ),
