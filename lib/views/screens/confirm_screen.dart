@@ -1,6 +1,10 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:tiktok_flutter/utils/constants.dart';
+import 'package:tiktok_flutter/views/screens/home_screen.dart';
 import 'package:tiktok_flutter/views/widgets/text_input_field.dart';
+import 'package:video_compress/video_compress.dart';
 import 'package:video_player/video_player.dart';
 
 class ConfirmScreen extends StatefulWidget {
@@ -21,15 +25,15 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
   late TextEditingController _songController;
   late TextEditingController _captionController;
   late VideoPlayerController _controller;
+  RxBool isLoading = false.obs;
 
   @override
   void initState() {
     _songController = TextEditingController();
     _captionController = TextEditingController();
     // Video Player
-    _controller = VideoPlayerController.file(widget.videoFile);
-    _controller.addListener(() {
-      setState(() {});
+    setState(() {
+      _controller = VideoPlayerController.file(widget.videoFile);
     });
     _controller.initialize();
     _controller.play();
@@ -86,18 +90,51 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
                     ),
                   ),
                   const SizedBox(
-                    height: 10,
+                    height: 25,
                   ),
-                  ElevatedButton(
-                    onPressed: () {},
-                    child: const Text(
-                      'Share!',
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.white,
+                  Obx(
+                    () => GestureDetector(
+                      onTap: () async {
+                        if (VideoCompress.isCompressing) {
+                          Get.snackbar(
+                            "Compressing Video",
+                            "Already Compressing a video.",
+                          );
+                        } else {
+                          isLoading.value = true;
+                          _controller.pause();
+                          final res = await uploadVideoController.uploadVideo(
+                            songName: _songController.text,
+                            caption: _captionController.text,
+                            videoPath: widget.videoPath,
+                          );
+                          isLoading.value = false;
+                          if (res == "success") {
+                            Get.to(HomeScreen());
+                          }
+                        }
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 10),
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        color: buttonColor,
+                        alignment: Alignment.center,
+                        child: isLoading.value == false
+                            ? const Text(
+                                'Share!',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                ),
+                              ),
                       ),
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
