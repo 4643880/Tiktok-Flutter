@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -13,7 +14,10 @@ class AddVideoScreen extends StatelessWidget {
       source: source,
     );
     if (_file != null) {
-      Get.to(() => const ConfirmScreen());
+      Get.to(() => ConfirmScreen(
+            videoFile: File(_file.path),
+            videoPath: _file.path,
+          ));
     }
   }
 
