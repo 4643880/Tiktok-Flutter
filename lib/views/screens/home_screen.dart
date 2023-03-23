@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tiktok_flutter/views/screens/add_video_screen.dart';
+import 'package:tiktok_flutter/views/screens/video_screen.dart';
 import 'package:tiktok_flutter/views/widgets/custom_icon.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -19,9 +20,6 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Home"),
-      ),
       bottomNavigationBar: Obx(
         () => BottomNavigationBar(
             currentIndex: pageIndex,
@@ -61,9 +59,7 @@ class HomeScreen extends StatelessWidget {
         physics: const NeverScrollableScrollPhysics(),
         onPageChanged: (value) {},
         children: const [
-          Center(
-            child: Text("Home"),
-          ),
+          VideoScreen(),
           Center(
             child: Text("Search"),
           ),
